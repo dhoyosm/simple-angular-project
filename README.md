@@ -2,10 +2,14 @@
 This is a simple Angular project to learn more about front-end frameworks, especially Angular
 
 # Installing Angular
-- Install Bower
+- Install Bower:
+```   
     $ npm install -g bower
-- Install Angular
+```
+- Install Angular:
+``` 
     $ bower install
+```
 
 # Server on Windows
 [NPM JS Server](https://www.npmjs.com/package/http-server)
