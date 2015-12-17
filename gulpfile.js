@@ -29,11 +29,20 @@ gulp.task('clean', function() {
 
 // Default task
 gulp.task('default', ['clean'], function() {
-    gulp.start('usemin', 'imagemin', 'copyfonts');
+    gulp.start('usemin', 'usemin2', 'imagemin', 'copyfonts');
 });
 
 gulp.task('usemin', ['jshint'], function() {
     return gulp.src('./app/menu.html')
+        .pipe(usemin({
+            css: [minifycss(), rev()],
+            js: [ngannotate(), uglify(), rev()]
+        }))
+        .pipe(gulp.dest('dist/'));
+});
+
+gulp.task('usemin2', ['jshint'], function() {
+    return gulp.src('./app/contactus.html')
         .pipe(usemin({
             css: [minifycss(), rev()],
             js: [ngannotate(), uglify(), rev()]
