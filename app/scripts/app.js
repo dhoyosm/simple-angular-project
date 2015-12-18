@@ -82,7 +82,7 @@ angular.module('confusionApp', [])
 .controller('FeedbackController', ['$scope', function($scope) {
     $scope.sendFeedback = function() {
         console.log($scope.feedback);
-        if ($scope.feedback.agree && ($scope.feedback.mychannel == "")) {
+        if ($scope.feedback.agree && ($scope.feedback.mychannel === "")) {
             $scope.invalidChannelSelection = true;
             console.log('incorrect');
         } else {
@@ -99,6 +99,93 @@ angular.module('confusionApp', [])
             $scope.feedbackForm.$setPristine();
             console.log($scope.feedback);
         }
+    };
+}])
+
+.controller('DishDetailController', ['$scope', function($scope) {
+
+    $scope.orderBy = '';
+
+    $scope.dish = {
+        name: 'Uthapizza',
+        image: 'images/uthapizza.png',
+        category: 'mains',
+        label: 'Hot',
+        price: '4.99',
+        description: 'A unique combination of Indian Uthappam (pancake) and Italian pizza, topped with Cerignola olives, ripe vine cherry tomatoes, Vidalia onion, Guntur chillies and Buffalo Paneer.',
+        comments: [{
+                rating: 5,
+                comment: "Imagine all the eatables, living in conFusion!",
+                author: "John Lemon",
+                date: "2012-10-16T17:57:28.556094Z"
+            }, {
+                rating: 4,
+                comment: "Sends anyone to heaven, I wish I could get my mother-in-law to eat it!",
+                author: "Paul McVites",
+                date: "2014-09-05T17:57:28.556094Z"
+            }, {
+                rating: 3,
+                comment: "Eat it, just eat it!",
+                author: "Michael Jaikishan",
+                date: "2015-02-13T17:57:28.556094Z"
+            }, {
+                rating: 4,
+                comment: "Ultimate, Reaching for the stars!",
+                author: "Ringo Starry",
+                date: "2013-12-02T17:57:28.556094Z"
+            }, {
+                rating: 2,
+                comment: "It's your birthday, we're gonna party!",
+                author: "25 Cent",
+                date: "2011-12-02T17:57:28.556094Z"
+            }
+
+        ]
+    };
+}])
+
+.controller('DishCommentController', ['$scope', function($scope) {
+
+    $scope.dishComment = {
+        author: "",
+        rating: 5,
+        comment: ""
+    };
+
+    $scope.stars = [{
+        value: 1,
+        label: 1
+    }, {
+        value: 2,
+        label: 2
+    }, {
+        value: 3,
+        label: 3
+    }, {
+        value: 4,
+        label: 4
+    }, {
+        value: 5,
+        label: 5
+    }];
+
+    $scope.submitComment = function() {
+        console.log($scope.dishComment);
+
+        $scope.dish.comments.push({
+            author: $scope.dishComment.author,
+            rating: $scope.dishComment.rating,
+            comment: $scope.dishComment.comment,
+            date: new Date()
+        });
+
+        $scope.dishComment = {
+            author: "",
+            rating: 5,
+            comment: ""
+        };
+
+        $scope.commentForm.$setPristine();
     };
 }])
 
