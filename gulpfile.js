@@ -24,12 +24,12 @@ gulp.task('jshint', function() {
 
 // Clean
 gulp.task('clean', function() {
-    return del(['dist']);
+    return del(['dist', 'json-server/public']);
 });
 
 // Default task
 gulp.task('default', ['clean'], function() {
-    gulp.start('usemin', 'usemin2', 'imagemin', 'copyfonts');
+    gulp.start('usemin', 'imagemin', 'copyfonts', 'public');
 });
 
 gulp.task('usemin', ['jshint'], function() {
@@ -41,13 +41,17 @@ gulp.task('usemin', ['jshint'], function() {
         .pipe(gulp.dest('dist/'));
 });
 
-gulp.task('usemin2', ['jshint'], function() {
-    return gulp.src('./app/contactus.html')
-        .pipe(usemin({
-            css: [minifycss(), rev()],
-            js: [ngannotate(), uglify(), rev()]
-        }))
-        .pipe(gulp.dest('dist/'));
+gulp.task('public', ['usemin', 'imagemin', 'copyfonts'], function() {
+    gulp.src('dist/**/*.html')
+        .pipe(gulp.dest('json-server/public/'));
+    gulp.src('dist/fonts/**/*.{ttf,woff,eof,svg}*')
+        .pipe(gulp.dest('json-server/public/fonts'));
+    gulp.src('dist/images/**/*')
+        .pipe(gulp.dest('json-server/public/images'));
+    gulp.src('dist/scripts/**/*.js')
+        .pipe(gulp.dest('json-server/public/scripts'));
+    gulp.src('dist/styles/**/*.css')
+        .pipe(gulp.dest('json-server/public/styles'));
 });
 
 // Images
