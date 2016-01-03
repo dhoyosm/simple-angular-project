@@ -1,3 +1,7 @@
+/*
+    author: Daniel Hoyos
+*/
+
 'use strict';
 
 angular.module('confusionApp')
@@ -66,7 +70,7 @@ angular.module('confusionApp')
 
 }])
 
-.controller('FeedbackController', ['$scope', function($scope) {
+.controller('FeedbackController', ['$scope', 'feedbackFactory', function($scope, feedbackFactory) {
 
     $scope.sendFeedback = function() {
 
@@ -76,6 +80,18 @@ angular.module('confusionApp')
             $scope.invalidChannelSelection = true;
             console.log('incorrect');
         } else {
+
+            var Feedback = feedbackFactory.getFeedback();
+
+            var newFeedback = new Feedback();
+            
+            newFeedback.mychannel = $scope.feedback.mychannel;
+            newFeedback.firstName = $scope.feedback.firstName;
+            newFeedback.lastName = $scope.feedback.lastName;
+            newFeedback.agree = $scope.feedback.agree;
+            newFeedback.email = $scope.feedback.email;
+            newFeedback.$save();
+
             $scope.invalidChannelSelection = false;
             $scope.feedback = {
                 mychannel: "",
@@ -86,7 +102,6 @@ angular.module('confusionApp')
             };
             $scope.feedback.mychannel = "";
             $scope.feedbackForm.$setPristine();
-            console.log($scope.feedback);
         }
     };
 }])
@@ -135,7 +150,7 @@ angular.module('confusionApp')
             date: ""
         };
     };
-    
+
     $scope.stars = [{
         value: 1,
         label: 1
@@ -170,15 +185,50 @@ angular.module('confusionApp')
             }
         );
 
-    $scope.promotion = menuFactory.getPromotion(0);
+    $scope.showPromotion = false;
+    $scope.promotionMessage = "Loading promotions...";
+    $scope.promotion = menuFactory.getPromotion().get({
+            id: 0
+        })
+        .$promise.then(
+            function(response) {
+                $scope.promotion = response;
+                $scope.showPromotion = true;
+            },
+            function(response) {
+                $scope.promotionMessage = "Error getting promotions: " + response.status + " " + response.statusText;
+            }
+        );
 
-    $scope.specialist = corporateFactory.getLeader(3);
+    $scope.showSpecialist = false;
+    $scope.specialistMessage = "Loading specialists...";
+    $scope.specialist = corporateFactory.getLeaders().get({
+            id: 3
+        })
+        .$promise.then(
+            function(response) {
+                $scope.specialist = response;
+                $scope.showSpecialist = true;
+            },
+            function(response) {
+                $scope.specialistMessage = "Error getting specialists: " + response.status + " " + response.statusText;
+            }
+        );
 }])
 
 .controller('AboutController', ['$scope', 'corporateFactory', function($scope, corporateFactory) {
 
-    $scope.leaders = corporateFactory.getLeaders();
-
+    $scope.showLeaders = false;
+    $scope.message = "Loading leaders...";
+    $scope.leaders = corporateFactory.getLeaders().query(
+        function(response) {
+            $scope.leaders = response;
+            $scope.showLeaders = true;
+        },
+        function(response) {
+            $scope.message = "Error getting leaders: " + response.status + " " + response.statusText;
+        }
+    );
 }])
 
 ;
